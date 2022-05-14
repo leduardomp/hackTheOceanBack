@@ -3,38 +3,18 @@ import initModels from '../models/init-models'
 
 const models = initModels(sequelize)
 
-// Create and save new Accion
-exports.create = async (req, res) => {
-    const { categoryAccion } = req.body;
-    const createCatAccion = await models.cat_accion.create({
-        desc_accion: categoryAccion
-    })
-        .then(createCatAccion => {
-            res.status(201).json({
-                data: createCatAccion,
-                accion: 1,
-                message: 'Category Accion Create'
-            })
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Error to create Category Accion "
-            })
-        })
-}; 
-
 // Retrieve all accions from the database.
 exports.findAll = async (req, res) => {
-    const catAccions = await models.cat_accion.findAll({})
-        .then(catAccions => {
+    await models.embarcacionPesca.findAll({})
+        .then(embarcacionPesca => {
             res.status(200).json({
-                data: catAccions,
-                message: 'Categorie Accions Listed'
+                data: embarcacionPesca,
+                message: 'lista Embarcacion'
             })
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error to find all Category Accions"
+                message: err.message || "Error to find all embarcaciones"
             })
         })
 };
@@ -61,9 +41,29 @@ exports.findOne = async (req, res) => {
         })
 };
 
+// Create and save new Accion
+exports.create = async (req, res) => {
+    const { categoryAccion } = req.body;
+    const createCatAccion = await models.cat_accion.create({
+        desc_accion: categoryAccion
+    })
+        .then(createCatAccion => {
+            res.status(201).json({
+                data: createCatAccion,
+                accion: 1,
+                message: 'Category Accion Create'
+            })
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error to create Category Accion "
+            })
+        })
+};
+
 // Update an Accion 
 exports.update = async (req, res) => {
-    const { idCategoryAccion, categoryAccion} = req.body;
+    const { idCategoryAccion, categoryAccion } = req.body;
     const updateCatAccion = await models.cat_accion.update(
         {
             desc_accion: categoryAccion
