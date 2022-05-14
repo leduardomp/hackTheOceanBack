@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: false
     },
-    ap_matero: {
+    ap_materno: {
       type: DataTypes.STRING(45),
       allowNull: false
     },
@@ -31,12 +31,21 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     salt: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(5),
       allowNull: false
     },
     tel_contacto: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(12),
       allowNull: false
+    },
+    access_token: {
+      type: DataTypes.STRING(200),
+      allowNull: true
+    },
+    activo: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+      defaultValue: 1
     }
   }, {
     sequelize,

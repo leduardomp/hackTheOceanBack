@@ -13,8 +13,11 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
 //Routes
-app.use('/embarcacion', require('./src/routes/embarcacion'));
-app.use('/redes', require('./src/routes/redes'));
+app.use('/auth', require('./src/routes/auth.route'));
+app.use('/usuario', require('./src/routes/usuario.route'));
+
+app.use('/embarcacion', require('./src/routes/embarcacion.route'));
+app.use('/redes', require('./src/routes/redes.route'));
  
 //GET home
 app.get('/', (req, res) => {    

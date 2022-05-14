@@ -1,4 +1,8 @@
 import jwt from 'jsonwebtoken'
+import sequelize from '../config/db.sequelize'
+import initModels from '../models/init-models'
+
+const models = initModels(sequelize)
 
 exports.authenticateToken = (req, res, next) => {
     const authHeader = req.headers.authorization
@@ -14,8 +18,38 @@ exports.authenticateToken = (req, res, next) => {
                 })
             }
 
-            req.user = user
-            next()
+            console.log("Antes de validar en base")
+
+            //validar que exista en BD
+            models.usuario.findAll({ where: { email: user.username } })
+                .then(users => {
+
+                    if (users.length !== 1)
+                        return res.status(404).send({
+                            idError: 2,
+                            message: "Error Token incorrecto"
+                        })
+
+                    if (users.length == 1) {
+
+                        if (users[0].access_token != token)
+                            return res.status(404).send({
+                                idError: 3,
+                                message: "Error Token incorrecto"
+                            })
+                    }
+
+
+                    //Regresa usuario y el token es valido
+                    req.user = user
+                    next()
+                })
+                .catch(err => {
+                    return res.status(404).send({
+                        idError: 1,
+                        message: err.message || "Error Token user"
+                    })
+                })
         })
     } else {
         return res.status(401).send({
@@ -27,15 +61,4 @@ exports.authenticateToken = (req, res, next) => {
 
 exports.generateAccessToken = (valores) => {
     return jwt.sign(valores, process.env.SECRET_TOKEN, { expiresIn: process.env.TIME_LIFE_TOKEN });
-}
-
-exports.authenticateTokenRefresh = (req, token) => {
-    jwt.verify(token, process.env.SECRET_TOKEN_REFRESH, (err, user) => {
-        if (err) req.userInToken = null
-        req.userInToken = user
-    })
-}
-
-exports.generateTokenRefresh = (valores) => {
-    return jwt.sign(valores, process.env.SECRET_TOKEN_REFRESH);
 }
