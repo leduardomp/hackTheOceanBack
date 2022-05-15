@@ -19,10 +19,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(12),
       allowNull: false
     },
-    localizacion: {
-      type: "POINT",
-      allowNull: false
-    },
     url_logo: {
       type: DataTypes.STRING(45),
       allowNull: false
@@ -30,6 +26,19 @@ module.exports = function(sequelize, DataTypes) {
     promocion: {
       type: DataTypes.STRING(100),
       allowNull: false
+    },
+    latitud: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
+    longitud: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
+    activo: {
+      type: DataTypes.TINYINT,
+      allowNull: true,
+      defaultValue: 1
     }
   }, {
     sequelize,

@@ -1,4 +1,5 @@
 import express from "express";
+import fileUpload from 'express-fileupload'
 import morgan from "morgan";
 import dotenv from "dotenv"
 dotenv.config();
@@ -11,13 +12,17 @@ app.set('json spaces', 2);
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
+app.use(fileUpload())
 
 //Routes
 app.use('/auth', require('./src/routes/auth.route'));
 app.use('/usuario', require('./src/routes/usuario.route'));
+app.use('/tiposUsuario', require('./src/routes/tipoUsuario.route'));
+app.use('/afiliadas', require('./src/routes/empAfiliadas.route'));
 
 app.use('/embarcacion', require('./src/routes/embarcacion.route'));
 app.use('/redes', require('./src/routes/redes.route'));
+app.use('/qr', require('./src/routes/qr.route'));
  
 //GET home
 app.get('/', (req, res) => {    
