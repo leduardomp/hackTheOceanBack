@@ -1,6 +1,5 @@
 import sequelize from '../config/db.sequelize'
 import initModels from '../models/init-models'
-import redPesca from '../models/redPesca';
 
 const models = initModels(sequelize)
 
@@ -46,9 +45,19 @@ exports.findOne = async (req, res) => {
         })
 };
 
+function randomNumber(min, max) {
+    const r = Math.random() * (max - min) + min
+    return Math.floor(r)
+}
+
+function generaSalt() {
+    return "".concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9))
+}
+
 // Create and save new Accion
 exports.create = async (req, res) => {
     const { idRedPesca, idEmbarcacion, isEstatusRedPesca, codigoQR, fechaAlta, fechBaja,  } = req.body;
+    const salt = generaSalt()
 
     await models.redPesca.create({
         id_red_pesca: idRedPesca,
@@ -59,6 +68,17 @@ exports.create = async (req, res) => {
         fecha_baja: fechBaja
     })
         .then(redPesca => {
+            let dataQr = {
+                codigo_qr: salt,
+            }
+
+            let stringdata = JSON.stringify(dataQr)
+
+            let qr_png = qr.image(stringdata, { type: 'png' });
+            qr_png.pipe(require('fs').createWriteStream(path.join(__dirname+'/','img','/',salt+'qr.png')));
+ 
+            let png_string = qr.imageSync(stringdata, { type: 'png' });
+
             res.status(201).json({
                 accion: 1,
                 message: 'Fishing net Create'

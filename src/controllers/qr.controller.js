@@ -3,25 +3,37 @@ import initModels from '../models/init-models'
 
 // Require the package
 import QRCode from 'qrcode'
+import redPesca from '../models/redPesca'
 
 const models = initModels(sequelize)
+
+function randomNumber(min, max) {
+    const r = Math.random() * (max - min) + min
+    return Math.floor(r)
+}
+
+function generaSalt() {
+    return "".concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9)).concat(randomNumber(0, 9))
+}
 
 // Find a single Accion with an id 
 exports.create = async (req, res) => {
 
+    const salt = generaSalt()
+
     console.log(req.params)
 
-    const { idEmbarcacion } = req.params;
+    const { idRedPesca } = req.params;
 
-    await models.embarcacionPesca.findAll({
+    await models.redPesca.findAll({
         where: {
-            id_embarcacion: idEmbarcacion
+            codigo_qr: salt
         }
     })
-        .then(embarcacionPesca => {
+        .then(redPesca => {
 
             let dataQr = {
-                idEmbarcacion : idEmbarcacion
+                codigo_qr : salt
             }
 
             // Print the QR code to terminal
@@ -36,7 +48,7 @@ exports.create = async (req, res) => {
 
             res.status(200).json({
                 accion: 1,
-                data: embarcacionPesca[0]
+                data: redPesca[0]
             })
         })
         .catch(err => {
