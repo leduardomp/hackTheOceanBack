@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import sequelize from '../config/db.sequelize'
 import initModels from '../models/init-models'
+import nodemailer from 'nodemailer';
 
 const models = initModels(sequelize)
 
@@ -87,6 +88,35 @@ exports.create = async (req, res) => {
     })
         .then(usuario => {
             //enviar email con contraseña
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'oceanthreadglobal@gmail.com',
+                    pass: 'LaunchXXX'
+                }
+            });
+
+            let mensaje = `Hola ${nombre} ${apPaterno}, \n\n`;
+            mensaje += `Gracias por formar parte de Ocean Thread, juntos haremos un mundo mejor \n\n\n\n`;
+            mensaje += `Su contraseña es: ${passwordTmp} \n\n\n\n`;
+            mensaje += `Es un gsto que te sumes a esta causa \n\n\n`;
+            mensaje += `Atte: Equipo de Ocean Thread \n\n\n`;
+
+            let mailOptions = {
+                from: 'oceanthreadglobal@gmail.com',
+                to: email,
+                subject: 'Alta sistema Ocean Thread',
+                text: mensaje
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    res.status(500).send({
+                        accion: 0,
+                        message: err.message || "Error to create User "
+                    })
+                }
+            });
 
             res.status(201).json({
                 accion: 1,
@@ -95,7 +125,7 @@ exports.create = async (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                accion:0,
+                accion: 0,
                 message: err.message || "Error to create User "
             })
         })

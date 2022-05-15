@@ -1,5 +1,7 @@
 node_modules
 z_peticones.http
+z_peticones_prod.http
 *.DS_Store
 .env
 .gitignore
+build
