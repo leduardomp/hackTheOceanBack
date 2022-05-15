@@ -8,6 +8,7 @@ exports.findAll = async (req, res) => {
     await models.embarcacionPesca.findAll({})
         .then(embarcacionPesca => {
             res.status(200).json({
+                accion: 1,
                 data: embarcacionPesca,
                 message: 'lista Embarcacion'
             })
@@ -21,86 +22,98 @@ exports.findAll = async (req, res) => {
 
 // Find a single Accion with an id 
 exports.findOne = async (req, res) => {
-    const { idCategoryAccion } = req.params;
-    const catAccion = await models.cat_accion.findAll({
-        attributes: ['id_accion', 'desc_accion'],
+
+    console.log(req.params)
+
+    const { idEmbarcacion } = req.params;
+    await models.embarcacionPesca.findAll({
         where: {
-            id_accion: idCategoryAccion
+            id_embarcacion: idEmbarcacion
         }
     })
-        .then(catAccion => {
+        .then(embarcacionPesca => {
             res.status(200).json({
-                data: catAccion,
-                meesage: 'Accion found'
+                accion: 1,
+                data: embarcacionPesca[0],
+                meesage: 'Boat found'
             })
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error bringing accion by id"
+                message: err.message || "Error bringing boat by id"
             })
         })
 };
 
 // Create and save new Accion
 exports.create = async (req, res) => {
-    const { categoryAccion } = req.body;
-    const createCatAccion = await models.cat_accion.create({
-        desc_accion: categoryAccion
+    const { idembarcacion, usuariopropietario, matricula, numtripulacion } = req.body;
+
+    await models.embarcacionPesca.create({
+        id_embarcacion: idembarcacion,
+        usuario_propietario: usuariopropietario,
+        matricula: matricula,
+        num_tripulacion: numtripulacion
     })
-        .then(createCatAccion => {
+        .then(embarcacionPesca => {
             res.status(201).json({
-                data: createCatAccion,
                 accion: 1,
-                message: 'Category Accion Create'
+                message: 'Boat Create'
             })
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error to create Category Accion "
+                message: err.message || "Error to create Boat "
             })
         })
 };
 
 // Update an Accion 
 exports.update = async (req, res) => {
-    const { idCategoryAccion, categoryAccion } = req.body;
-    const updateCatAccion = await models.cat_accion.update(
+    const { idembarcacion, usuariopropietario, matricula, numtripulacion } = req.body;
+
+    await models.embarcacionPesca.update(
         {
-            desc_accion: categoryAccion
+            usuario_propietario: usuariopropietario,
+            matricula: matricula,
+            num_tripulacion: numtripulacion
         }, {
-        where: { id_accion: idCategoryAccion }
+        where: { id_embarcacion: idembarcacion }
     })
-        .then(updateCatAccion => {
+        .then(embarcacionPesca => {
             res.status(200).json({
-                data: updateCatAccion,
                 accion: 1,
-                message: 'Accion Updated'
+                message: 'Boat Updated'
             })
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error updating Accion"
+                message: err.message || "Error updating Boat"
             })
         })
 };
 
 // Delete an Accion
 exports.delete = async (req, res) => {
-    const { idCategoryAccion } = req.params;
-    const deleteCatAccion = await models.cat_accion.destroy(
+    const { idEmbarcacion } = req.params;
+    await models.embarcacionPesca.update(
         {
-            where: { id_accion: idCategoryAccion }
+            activo: false
+        },
+        {
+            where: { id_embarcacion: idEmbarcacion }
         }
     )
-        .then(deleteCatAccion => {
+        .then(embarcacionPesca => {
             res.status(200).json({
-                data: deleteCatAccion,
-                message: 'Accion deleted'
+                accion: 1,
+                message: 'Boat deleted'
             })
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || 'The Accion could not be deleted'
+                accion: 0,
+                message: err.message || 'The Boat could not be deleted'
             })
         })
 };
