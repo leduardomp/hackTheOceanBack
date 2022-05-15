@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'oceanThread'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_76099EFC9D6D4F7CA8F95641C4E27454 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55E4167BF11A4741BB43801EB0367A7D }}
           package: .
