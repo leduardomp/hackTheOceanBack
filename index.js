@@ -2,6 +2,8 @@ import express from "express";
 import fileUpload from 'express-fileupload'
 import morgan from "morgan";
 import dotenv from "dotenv"
+var cors = require('cors')
+
 dotenv.config();
 
 const app = express();
@@ -12,7 +14,8 @@ app.set('json spaces', 2);
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(fileUpload())
+app.use(fileUpload());
+app.use(cors());
 
 //Routes
 app.use('/auth', require('./src/routes/auth.route'));

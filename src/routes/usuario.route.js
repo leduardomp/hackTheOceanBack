@@ -7,6 +7,7 @@ const router = Router();
 //Raiz
 router.get('/', token.authenticateToken, usuario.findAll)
 router.get('/:idUsuario', token.authenticateToken, usuario.findOne)
+router.get('/tipo/:idTipo', token.authenticateToken, usuario.findTipo)
 router.post('/', token.authenticateToken, usuario.create)
 router.put('/', token.authenticateToken, usuario.update)
 router.delete('/:idUsuario', token.authenticateToken, usuario.delete)

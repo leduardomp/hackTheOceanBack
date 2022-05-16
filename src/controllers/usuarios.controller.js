@@ -38,6 +38,30 @@ exports.findAll = async (req, res) => {
         })
 };
 
+// Retrieve all accions from the database.
+exports.findTipo = async (req, res) => {
+    console.log(req.params)
+
+    const { idTipo } = req.params;
+    await models.usuario.findAll({
+        where: {
+            id_tipo_usuario: idTipo
+        }
+    }).then(usuarios => {
+        res.status(200).json({
+            accion: 1,
+            data: usuarios,
+            message: 'lista usuarios'
+        })
+    })
+        .catch(err => {
+            res.status(500).send({
+                accion: 0,
+                message: err.message || "Error to find all users"
+            })
+        })
+};
+
 // Find a single Accion with an id 
 exports.findOne = async (req, res) => {
 
@@ -109,14 +133,16 @@ exports.create = async (req, res) => {
                 text: mensaje
             };
 
+            /*
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     res.status(500).send({
                         accion: 0,
-                        message: err.message || "Error to create User "
+                        message: error.message || "Error to enivar email "
                     })
                 }
             });
+            */
 
             res.status(201).json({
                 accion: 1,
